@@ -38,7 +38,8 @@ This project leverages computer vision and deep learning to recognize hand gestu
 5. Use the text-to-speech feature to vocalize sentences.
 
 ## Output
-![image](https://github.com/user-attachments/assets/99d583e1-7366-4c56-95c2-e8b760d45cbf)
+![image](https://github.com/user-attachments/assets/ee94e9cb-01f2-499d-bf64-09747cc094ec)
+
 
 
 ## Contributing
