@@ -37,6 +37,10 @@ This project leverages computer vision and deep learning to recognize hand gestu
 4. Translate sentences to the desired language using the dropdown menu.
 5. Use the text-to-speech feature to vocalize sentences.
 
+## Output
+![image](https://github.com/user-attachments/assets/99d583e1-7366-4c56-95c2-e8b760d45cbf)
+
+
 ## Contributing
 Contributions are welcome! Please fork the repository and submit a pull request.
 
