@@ -12,6 +12,10 @@ import enchant
 import tkinter as tk
 from PIL import Image, ImageTk
 import requests
+from gtts import gTTS
+from pygame import mixer
+import webbrowser
+import mediapipe as mp 
 
 offset=29
 
@@ -52,13 +56,14 @@ class Application:
         self.root = tk.Tk()
         self.root.title("Sign Language To Text Conversion Based On Hand Gesture Recognization(Multilingual Transalation)")
         self.root.protocol('WM_DELETE_WINDOW', self.destructor)
-        self.root.geometry("1300x700")
+        self.root.geometry("1300x1700")
 
+        
         self.panel = tk.Label(self.root)
-        self.panel.place(x=100, y=3, width=480, height=640)
+        self.panel.place(x=50, y=3, width=650, height=540)
 
-        self.panel2 = tk.Label(self.root)  # initialize image panel
-        self.panel2.place(x=700, y=115, width=400, height=400)
+        # self.panel2 = tk.Label(self.root)  # initialize image panel
+        # self.panel2.place(x=700, y=115, width=400, height=400)
 
         self.T = tk.Label(self.root)
         self.T.place(x=10, y=5)
@@ -80,7 +85,7 @@ class Application:
 
         self.T4 = tk.Label(self.root)
         self.T4.place(x=10, y=700)
-        self.T4.config(text="Suggestions :", fg="red", font=("Helvetica", 16))
+        self.T4.config(text="Advice :", fg="red", font=("Helvetica", 16))
 
 
         self.b1=tk.Button(self.root,relief="flat", bg=self.root.cget("bg"), highlightthickness=0, activebackground=self.root.cget("bg"))
@@ -95,9 +100,9 @@ class Application:
         self.b4 = tk.Button(self.root,relief="flat", bg=self.root.cget("bg"), highlightthickness=0, activebackground=self.root.cget("bg"))
         self.b4.place(x=450, y=700)
 
-        self.speak = tk.Button(self.root)
-        self.speak.place(x=1350, y=630)
-        self.speak.config(text="Speak", font=("Helvetica", 16), wraplength=100, command=self.speak_fun)
+        # self.speak = tk.Button(self.root)
+        # self.speak.place(x=1350, y=630)
+        # self.speak.config(text="Speak", font=("Helvetica", 16), wraplength=100, command=self.speak_fun)
 
         self.clear = tk.Button(self.root)
         self.clear.place(x=1205, y=630)
@@ -129,7 +134,20 @@ class Application:
         self.remove.config(text="Remove", font=("Helvetica", 16), wraplength=100, command=self.remove_char)
         #remove part end
 
+        #speak2o start
+        self.speak_20 = tk.Button(self.root)
+        self.speak_20.place(x=1350, y=630)  # Adjust the position as needed
+        self.speak_20.config(text="Speak 2.0", font=("Helvetica", 16), wraplength=100, command=self.speak_2o)
 
+        #speak2o end
+
+        #link to images
+        self.link_to_img=tk.Button(self.root)
+        self.link_to_img.place(x=1350, y=700)
+        self.link_to_img.config(text="Ref",font=("Helvetica", 16), wraplength=100, command=lambda: webbrowser.open('https://aslfyp.ccbp.tech/'))
+        
+
+        #end to link images
 
 
         self.str = " "
@@ -150,27 +168,24 @@ class Application:
         try:
             ok, frame = self.vs.read()
             cv2image = cv2.flip(frame, 1)
-            hands = hd.findHands(cv2image, draw=False, flipType=True)
+            hands = hd.findHands(cv2image, draw=True, flipType=True)
             cv2image_copy=np.array(cv2image)
             cv2image = cv2.cvtColor(cv2image, cv2.COLOR_BGR2RGB)
             self.current_image = Image.fromarray(cv2image)
             imgtk = ImageTk.PhotoImage(image=self.current_image)
             self.panel.imgtk = imgtk
             self.panel.config(image=imgtk)
-
             if hands:
                 # #print(" --------- lmlist=",hands[1])
                 hand = hands[0]
-          
                 lmList, bbox = () , ()
                 for item in hand:
                     lmList = item['lmList']
                     bbox = item['bbox']
-                    
                 x, y, w, h = bbox[0]+300, bbox[1]+300, bbox[2]+350, bbox[3]+100
                 # x, y, w, h = hand['bbox']
                 image = cv2image_copy[y - offset:y + h + offset, x - offset:x + w + offset]
-
+                
                 white = cv2.imread("C:\\Users\\SURYA\\Desktop\\sign_lang\\white.jpg")
                 
 
@@ -218,10 +233,17 @@ class Application:
 
                     self.current_image2 = Image.fromarray(res)
 
-                    imgtk = ImageTk.PhotoImage(image=self.current_image2)
+                    # imgtk = ImageTk.PhotoImage(image=self.current_image2)
+                    
+                    # opencv_image = np.array(self.current_image2)
 
-                    self.panel2.imgtk = imgtk
-                    self.panel2.config(image=imgtk)
+                    # # Convert RGB to BGR (OpenCV uses BGR format, PIL uses RGB)
+                    # opencv_image = cv2.cvtColor(opencv_image, cv2.COLOR_RGB2BGR)
+
+                    # # Display the image in a separate window using OpenCV
+                    # cv2.imshow("Image", opencv_image)
+                    # self.panel2.imgtk = imgtk
+                    # self.panel2.config(image=imgtk)
 
                     self.panel3.config(text=self.current_symbol, font=("Helvetica", 16))
 
@@ -233,7 +255,7 @@ class Application:
                     self.b2.config(text=self.word2, font=("Helvetica", 16), wraplength=825,  command=self.action2)
                     self.b3.config(text=self.word3, font=("Helvetica", 16), wraplength=825,  command=self.action3)
                     self.b4.config(text=self.word4, font=("Helvetica", 16), wraplength=825,  command=self.action4)
-
+            # cv2.imshow("Hand Detection",img1)
             self.panel5.config(text=self.str, font=("Helvetica", 16))
         except Exception:
             print("==", traceback.format_exc())
@@ -294,6 +316,24 @@ class Application:
         self.panel5.config(text=self.str)
 
     #remove function in sentence end
+
+
+    #speak fucntion
+    def speak_2o(self):
+        text_to_speak = self.translation_output.cget("text")
+        target_language = self.language_var.get()
+        file_name="telugu.mp3"
+        try:
+            tts = gTTS(text=text_to_speak, lang=target_language)
+            tts.save(file_name)
+            print(f"Audio saved as {file_name}. Playing now...")
+            # Play the audio file (works on most OS)
+            # mixer.init()  # Initialize the mixer
+            # mixer.music.load("telugu.mp3")  # Load your audio file
+            # mixer.music.play()
+            os.system(f"start {file_name}" if os.name == "nt" else f"open {file_name}")
+        except Exception as e:
+            print(f"Error: {e}")
 
 
     def action1(self):
@@ -818,6 +858,12 @@ class Application:
             self.word=word
             print("----------word = ",word)
             if len(word.strip())!=0:
+                # x=self.generate_suggestions(word)
+                # print(x)
+                # self.word1=x[0]
+                # self.word2=x[1]
+                # self.word3=x[2]
+                # self.word4=x[3]
                 hs.check(word)
                 lenn = len(hs.suggest(word))
                 if lenn >= 4:
