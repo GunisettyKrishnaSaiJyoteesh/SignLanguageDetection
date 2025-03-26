@@ -39,6 +39,8 @@ This project leverages computer vision and deep learning to recognize hand gestu
 
 ## Output
 ![image](https://github.com/user-attachments/assets/ee94e9cb-01f2-499d-bf64-09747cc094ec)
+![Screenshot 2025-01-31 091139](https://github.com/user-attachments/assets/28436103-4cc1-4642-8cd0-377abef4eb1e)
+
 
 
 
