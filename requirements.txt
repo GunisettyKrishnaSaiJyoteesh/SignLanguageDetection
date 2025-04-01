@@ -1,0 +1,12 @@
+
+numpy==2.0.2
+opencv-python==4.10.0
+pyttsx3==2.90
+keras==3.7.0
+cvzone==1.5.0
+pyenchant==3.2.2
+Pillow==11.0.0
+requests==2.32.3
+gTTS==2.5.4
+pygame==2.6.1
+mediapipe==0.10.10
