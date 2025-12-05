@@ -168,35 +168,37 @@ class Application:
         try:
             ok, frame = self.vs.read()
             cv2image = cv2.flip(frame, 1)
-            hands = hd.findHands(cv2image, draw=True, flipType=True)
+            img_out, hands = hd.findHands(cv2image, draw=True, flipType=True)
             cv2image_copy=np.array(cv2image)
             cv2image = cv2.cvtColor(cv2image, cv2.COLOR_BGR2RGB)
             self.current_image = Image.fromarray(cv2image)
             imgtk = ImageTk.PhotoImage(image=self.current_image)
             self.panel.imgtk = imgtk
             self.panel.config(image=imgtk)
+            img_out, hands = hd.findHands(cv2image, draw=True, flipType=True)
+
             if hands:
-                # #print(" --------- lmlist=",hands[1])
                 hand = hands[0]
-                lmList, bbox = () , ()
-                for item in hand:
-                    lmList = item['lmList']
-                    bbox = item['bbox']
-                x, y, w, h = bbox[0]+300, bbox[1]+300, bbox[2]+350, bbox[3]+100
-                # x, y, w, h = hand['bbox']
-                image = cv2image_copy[y - offset:y + h + offset, x - offset:x + w + offset]
-                
-                white = cv2.imread("C:\\Users\\SURYA\\Desktop\\sign_lang\\white.jpg")
-                
+                lmList = hand['lmList']
+                bbox = hand['bbox']  # (x, y, w, h)
 
-                handz = hd2.findHands(image, draw=False, flipType=True)
-                print(" ", self.ccc)
-                self.ccc += 1
+                x, y, w, h = bbox
+
+                x1 = max(0, x - offset)
+                y1 = max(0, y - offset)
+                x2 = min(cv2image_copy.shape[1], x + w + offset)
+                y2 = min(cv2image_copy.shape[0], y + h + offset)
+
+                image = cv2image_copy[y1:y2, x1:x2]
+
+                white = cv2.imread(r"C:\Users\HP\Desktop\SIGN_LANGUAGE_WITH_SENTENCE_CONSTRUCTION\white.jpg")
+
+                _, handz = hd2.findHands(image, draw=False, flipType=True)
+
                 if handz:
-                    hand = handz[0]
-                    self.pts = lmList
+                    self.pts = lmList  # correct landmarks
+        # your drawing + prediction code continues here…
                     # self.pts = hand['lmList']
-
                     os = ((400 - w) // 2) - 15
                     os1 = ((400 - h) // 2) - 15
                     for t in range(0, 4, 1):
@@ -900,6 +902,9 @@ current_y = datetime.now().year
 current_m = datetime.now().month
 
 current_ym = current_y * 100 + current_m
-if current_ym <= 202503:
-    (Application()).root.mainloop()
+if current_ym <= 202512:
+    app = Application()
+    app.root.mainloop()
+
+
 

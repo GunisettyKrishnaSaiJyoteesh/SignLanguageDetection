@@ -12,7 +12,7 @@ from sklearn.metrics import confusion_matrix
 import pandas as pd
 
 # Define dataset paths
-train_dir = "D:/SURYA FOLDER/sign_lang/dataset/dataset"
+train_dir = r"C:\Users\HP\Desktop\SIGN_LANGUAGE_WITH_SENTENCE_CONSTRUCTION\dataset\dataset"
 # You can add validation and test directories similarly
 
 # ImageDataGenerator for data augmentation
@@ -85,7 +85,7 @@ plt.show()
 
 # Assuming validation data is similarly loaded with a validation data generator:
 validation_generator = ImageDataGenerator(rescale=1./255).flow_from_directory(
-    'D:/SURYA FOLDER/sign_lang/dataset/validation',
+    'C:/Users/HP/Desktop/SIGN_LANGUAGE_WITH_SENTENCE_CONSTRUCTION/dataset/dataset/validation',
     target_size=(224, 224),
     batch_size=32,
     class_mode='categorical'
